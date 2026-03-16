@@ -1,2 +1,2 @@
-# Mesafe-Hesaplama-c-
+# mesafe-hesaplama-cpp
 c++ ile geliştirilmiş, hata kontrollü iki nokta arası mesafe hesaplayıcı.
