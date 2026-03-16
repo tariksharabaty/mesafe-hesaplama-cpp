@@ -1,41 +1,24 @@
-**İki Nokta Arası Uzaklık Hesaplayıcı**
+# 📏 İki Nokta Arası Uzaklık Hesaplayıcı (Sygrad Math Engine)
 
-İstanbul Kent Üniversitesi Bilgisayar Programlama 2 ödevi için hazırlanmış C++ programı.
+**İstanbul Kent Üniversitesi Bilgisayar Programlama II** dersi kapsamında geliştirilmiş, ileri seviye C++ özelliklerini barındıran profesyonel mesafe hesaplama uygulamasıdır.
 
-**💻 Öğrenci Bilgileri**
+## 💻 Öğrenci Bilgileri
+* **Ad Soyad:** Tarek Sharabaty
+* **Öğrenci Numarası:** 2507020015
+* **Bölümü:** Bilgisayar Mühendisliği
 
-Ad Soyad: Tarek Sharabaty
+## 👨‍💻 Programın Çalışma Mantığı
+Program, **Sygrad Mühendislik Standartları** baz alınarak modüler ve nesne yönelimli (OOP) bir yapıda tasarlanmıştır:
+1.  **Veri Girişi:** `Sygrad::ConsoleUI::RequestInput` statik fonksiyonu ile kullanıcıdan X ve Y koordinatları güvenli bir şekilde alınır.
+2.  **Nesne Oluşturma:** Alınan değerler, şablon tabanlı (template) `Sygrad::Point<T>` sınıfından üretilen nesnelerde depolanır.
+3.  **Matematiksel Motor:** `Sygrad::MathEngine::CalculateEuclidean` statik metodu, Öklid mesafesi formülünü ($d = \sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2}$) işletir:
+    * `std::pow` ile eksen farklarının kareleri hesaplanır.
+    * `std::sqrt` ile toplamın karekökü alınarak nihai mesafe ($d$) elde edilir.
+4.  **Raporlama:** Elde edilen sonuçlar `Sygrad::ConsoleUI::DisplayResult` ile tablo formatında ve 4 basamak hassasiyetle kullanıcıya sunulur. Nokta bilgileri, `operator<<` aşırı yüklemesi sayesinde doğrudan ekrana yazdırılır.
 
-Öğrenci Numarası: 2507020015
-
-Bölümü: Bilgisayar Mühendisliği
-
-
-**👨‍💻 Programın Çalışma Mantığı**
-
-**Program, Sygrad Mühendislik Standartları baz alınarak modüler bir yapıda tasarlanmıştır:**
-
-**Veri Girişi:** ConsoleUI::RequestInput fonksiyonu ile kullanıcıdan X ve Y koordinatları güvenli bir şekilde alınır.
-
-**Nesne Oluşturma:** Alınan değerler, şablon tabanlı (template) Point<T> sınıfından üretilen nesnelerde depolanır.
-
-**Matematiksel Motor:** MathEngine::CalculateEuclidean statik metodu, Öklid mesafesi formülünü <img width="6400" height="20" alt="image" src="https://github.com/user-attachments/assets/72049a60-b6e2-40ca-a1d9-7a5092de4ee1" /> işletir.
- 
-:std::pow ile eksen farklarının kareleri hesaplanır.
-:std::sqrt ile toplamın karekökü alınarak nihai mesafe ($d$) elde edilir.
-
-**Raporlama:** Elde edilen sonuçlar ConsoleUI::DisplayResult ile tablo formatında ve 4 basamak hassasiyetle kullanıcıya sunulur.
-
-
-**⚙️ Program Özellikleri**
-
-**Generic Programming:** Şablon (Template) yapısı sayesinde sadece double değil, int veya float gibi farklı veri tipleriyle çalışabilir.
-
-**Gelişmiş Girdi Doğrulama (Robust Input):** Kullanıcı sayı yerine harf veya geçersiz bir karakter girerse program çökmez; hata mesajı vererek std::cin.clear() ve std::cin.ignore() ile akışı temizler ve tekrar giriş ister.
-
-**OOP & Namespace:** Kod karmaşasını önlemek için Sygrad isim uzayı (namespace) ve sınıflar (class) kullanılarak endüstriyel standartlarda geliştirilmiştir.
-
-**Süreklilik:** Program her hesaplamadan sonra kullanıcıya devam etmek isteyip istemediğini sorarak döngüsel kullanım imkanı sunar.
-
-**Formatlı Çıktı:** iomanip kütüphanesi (setw, setprecision) kullanılarak sonuçlar estetik bir rapor şablonunda gösterilir.
-
+## ⚙️ Program Özellikleri
+* 🏗️ **OOP & Namespace:** Kod karmaşasını önlemek ve profesyonel bir yapı sunmak için `Sygrad` isim uzayı (namespace) ve sınıflar (class) kullanılarak endüstriyel standartlarda geliştirilmiştir.
+* 🛡️ **Gelişmiş Girdi Doğrulama (Robust Input):** Kullanıcı sayı yerine harf veya geçersiz bir karakter girerse program çökmez; hata mesajı vererek `std::cin.clear()` ve `std::cin.ignore()` ile akışı temizler ve tekrar giriş ister.
+* 🚀 **Generic Programming (Şablon Tabanlı):** `Sygrad::Point` sınıfının şablon (template) yapısı, farklı veri tipleriyle (örneğin `int`, `float`) çalışmaya imkan tanır. Ancak, mesafe hesaplama fonksiyonu (`Sygrad::MathEngine::CalculateEuclidean`) ve veri girişi `double` veri tipine göre yapılmıştır.
+* 🔄 **Süreklilik:** Program, her hesaplamadan sonra kullanıcıya devam etmek isteyip istemediğini sorar ve `keepRunning` değişkeni ile kontrol edilen döngüsel bir yapı sunar.
+* 📊 **Formatlı Çıktı:** `iomanip` kütüphanesi (`setw`, `setprecision`, `fixed`) kullanılarak sonuçlar estetik bir rapor şablonunda gösterilir.
