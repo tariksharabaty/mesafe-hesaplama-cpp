@@ -3,9 +3,10 @@
 #include <iomanip>
 #include <limits>
 #include <string>
+#include <locale> // Turkce karakter destegi icin
 
 /**
- * @brief Koordinat sistemindeki bir noktayi temsil eden sablon sinif.
+ * @brief Koordinat sistemindeki bir noktayı temsil eden şablon sınıf.
  */
 template <typename T>
 class Point {
@@ -14,7 +15,7 @@ public:
 
     Point(T x = 0, T y = 0) : x(x), y(y) {}
 
-    // Operator Asiri Yukleme: Noktayi dogrudan cout ile yazdirabilmek icin
+    // Operatör Aşırı Yükleme: Noktayı doğrudan cout ile yazdırabilmek için
     friend std::ostream& operator<<(std::ostream& os, const Point<T>& p) {
         os << "(" << p.x << ", " << p.y << ")";
         return os;
@@ -22,7 +23,7 @@ public:
 };
 
 /**
- * @brief Matematiksel hesaplamalari yoneten sinif
+ * @brief Matematiksel hesaplamaları yöneten yardımcı sınıf.
  */
 class MathUtility {
 public:
@@ -33,14 +34,14 @@ public:
 };
 
 /**
- * @brief Konsol Arayuz Yonetimi
+ * @brief Konsol Arayüzü Yönetimi
  */
 class UserInterface {
 public:
     static void ShowHeader() {
         std::cout << "\n"
                   << "   =========================================\n"
-                  << "   |        IKI NOKTA ARASI MESAFE         |\n"
+                  << "   |        İKİ NOKTA ARASI MESAFE         |\n"
                   << "   |           HESAPLAYICI v1.0            |\n"
                   << "   =========================================\n\n";
     }
@@ -50,10 +51,11 @@ public:
         while (true) {
             std::cout << "   > " << label << ": ";
             if (std::cin >> value) {
+                // Girişten sonra kalan karakterleri temizle
                 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                 return value;
             }
-            std::cout << "   [!] Hata: Gecersiz giris. Lutfen sayi giriniz.\n";
+            std::cout << "   [!] Hata: Geçersiz giriş. Lütfen bir sayı giriniz.\n";
             std::cin.clear();
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         }
@@ -74,18 +76,21 @@ public:
 };
 
 int main() {
+    // Windows terminalinde Turkce karakterlerin dogru gorunmesini saglar
+    setlocale(LC_ALL, "Turkish");
+
     UserInterface::ShowHeader();
 
     bool keepRunning = true;
     while (keepRunning) {
         std::cout << "   --- Koordinat Verilerini Giriniz ---\n";
         
-        double x1 = UserInterface::RequestInput("Nokta 1 (X)");
-        double y1 = UserInterface::RequestInput("Nokta 1 (Y)");
+        double x1 = UserInterface::RequestInput("1. Nokta (X)");
+        double y1 = UserInterface::RequestInput("1. Nokta (Y)");
         Point<double> p1(x1, y1);
 
-        double x2 = UserInterface::RequestInput("Nokta 2 (X)");
-        double y2 = UserInterface::RequestInput("Nokta 2 (Y)");
+        double x2 = UserInterface::RequestInput("2. Nokta (X)");
+        double y2 = UserInterface::RequestInput("2. Nokta (Y)");
         Point<double> p2(x2, y2);
 
         double dist = MathUtility::CalculateDistance(p1, p2);
@@ -94,10 +99,12 @@ int main() {
         std::cout << "\n   Tekrar hesaplama yapmak istiyor musunuz? (E/H): ";
         char choice;
         std::cin >> choice;
+        
+        // Sadece 'e' veya 'E' girilirse devam eder
         keepRunning = (choice == 'e' || choice == 'E');
         
         if (!keepRunning) {
-            std::cout << "\n   Program kapatiliyor. Iyi gunler dileriz!\n";
+            std::cout << "\n   Program kapatılıyor. İyi günler dileriz!\n";
         }
     }
 
