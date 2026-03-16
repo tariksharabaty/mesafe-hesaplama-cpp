@@ -1,4 +1,4 @@
-# 📏 İki Nokta Arası Uzaklık Hesaplayıcı
+# İki Nokta Arası Uzaklık Hesaplayıcı
 
 **İstanbul Kent Üniversitesi Bilgisayar Programlama II** dersi için hazırlanmış, nesne yönelimli programlama (OOP) prensiplerine uygun C++ konsol uygulamasıdır.
 
