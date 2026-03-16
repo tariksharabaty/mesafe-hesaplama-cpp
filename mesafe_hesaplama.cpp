@@ -3,28 +3,26 @@
 #include <iomanip>
 #include <limits>
 #include <string>
-#include <locale> // Turkce karakter destegi icin
+#include <fcntl.h>  // _setmode için
+#include <io.h>     // _setmode ve _fileno için
 
 /**
  * @brief Koordinat sistemindeki bir noktayı temsil eden şablon sınıf.
+ * Wide string (wstring) desteği eklenmiştir.
  */
 template <typename T>
 class Point {
 public:
     T x, y;
-
     Point(T x = 0, T y = 0) : x(x), y(y) {}
 
-    // Operatör Aşırı Yükleme: Noktayı doğrudan cout ile yazdırabilmek için
-    friend std::ostream& operator<<(std::ostream& os, const Point<T>& p) {
-        os << "(" << p.x << ", " << p.y << ")";
+    // Geniş karakter çıkış akışı (wostream) için operatör aşırı yükleme
+    friend std::wostream& operator<<(std::wostream& os, const Point<T>& p) {
+        os << L"(" << p.x << L", " << p.y << L")";
         return os;
     }
 };
 
-/**
- * @brief Matematiksel hesaplamaları yöneten yardımcı sınıf.
- */
 class MathUtility {
 public:
     template <typename T>
@@ -33,78 +31,75 @@ public:
     }
 };
 
-/**
- * @brief Konsol Arayüzü Yönetimi
- */
 class UserInterface {
 public:
     static void ShowHeader() {
-        std::cout << "\n"
-                  << "   =========================================\n"
-                  << "   |        İKİ NOKTA ARASI MESAFE         |\n"
-                  << "   |           HESAPLAYICI v1.0            |\n"
-                  << "   =========================================\n\n";
+        std::wcout << L"\n"
+                   << L"   =========================================\n"
+                   << L"   |        İKİ NOKTA ARASI MESAFE         |\n"
+                   << L"   |           HESAPLAYICI v1.0            |\n"
+                   << L"   =========================================\n\n";
     }
 
-    static double RequestInput(const std::string& label) {
+    static double RequestInput(const std::wstring& label) {
         double value;
         while (true) {
-            std::cout << "   > " << label << ": ";
-            if (std::cin >> value) {
-                // Girişten sonra kalan karakterleri temizle
-                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::wcout << L"   > " << label << L": ";
+            if (std::wcin >> value) {
+                std::wcin.ignore((std::numeric_limits<std::streamsize>::max)(), L'\n');
                 return value;
             }
-            std::cout << "   [!] Hata: Geçersiz giriş. Lütfen bir sayı giriniz.\n";
-            std::cin.clear();
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::wcout << L"   [!] Hata: Geçersiz giriş. Lütfen bir sayı giriniz.\n";
+            std::wcin.clear();
+            std::wcin.ignore((std::numeric_limits<std::streamsize>::max)(), L'\n');
         }
     }
 
     template <typename T>
     static void DisplayResult(const Point<T>& p1, const Point<T>& p2, double res) {
-        std::cout << "\n   +---------------------------------------+\n"
-                  << "   |           HESAPLAMA RAPORU            |\n"
-                  << "   +---------------------------------------+\n"
-                  << "   | Nokta A : " << std::setw(27) << p1 << " |\n"
-                  << "   | Nokta B : " << std::setw(27) << p2 << " |\n"
-                  << "   |---------------------------------------|\n"
-                  << "   | Mesafe  : " << std::fixed << std::setprecision(4) 
-                  << std::setw(15) << res << " birim       |\n"
-                  << "   +---------------------------------------+\n";
+        std::wcout << L"\n   +---------------------------------------+\n"
+                   << L"   |           HESAPLAMA RAPORU            |\n"
+                   << L"   +---------------------------------------+\n"
+                   << L"   | Nokta A : " << std::setw(27) << p1 << L" |\n"
+                   << L"   | Nokta B : " << std::setw(27) << p2 << L" |\n"
+                   << L"   |---------------------------------------|\n"
+                   << L"   | Mesafe  : " << std::fixed << std::setprecision(4) 
+                   << std::setw(15) << res << L" birim       |\n"
+                   << L"   +---------------------------------------+\n";
     }
 };
 
 int main() {
-    // Windows terminalinde Turkce karakterlerin dogru gorunmesini saglar
-    setlocale(LC_ALL, "Turkish");
+    // ÇOK KRİTİK ADIM: Terminali UTF-16 (Unicode) moduna geçiriyoruz.
+    // Bu satır Windows'ta Türkçe karakterlerin bozulmasını engelleyen en kesin yöntemdir.
+    _setmode(_fileno(stdout), 0x00020000); // _O_U16TEXT
+    _setmode(_fileno(stdin), 0x00020000);  // _O_U16TEXT
 
     UserInterface::ShowHeader();
 
     bool keepRunning = true;
     while (keepRunning) {
-        std::cout << "   --- Koordinat Verilerini Giriniz ---\n";
+        std::wcout << L"   --- Koordinat Verilerini Giriniz ---\n";
         
-        double x1 = UserInterface::RequestInput("1. Nokta (X)");
-        double y1 = UserInterface::RequestInput("1. Nokta (Y)");
+        double x1 = UserInterface::RequestInput(L"1. Nokta (X)");
+        double y1 = UserInterface::RequestInput(L"1. Nokta (Y)");
         Point<double> p1(x1, y1);
 
-        double x2 = UserInterface::RequestInput("2. Nokta (X)");
-        double y2 = UserInterface::RequestInput("2. Nokta (Y)");
+        double x2 = UserInterface::RequestInput(L"2. Nokta (X)");
+        double y2 = UserInterface::RequestInput(L"2. Nokta (Y)");
         Point<double> p2(x2, y2);
 
         double dist = MathUtility::CalculateDistance(p1, p2);
         UserInterface::DisplayResult(p1, p2, dist);
 
-        std::cout << "\n   Tekrar hesaplama yapmak istiyor musunuz? (E/H): ";
-        char choice;
-        std::cin >> choice;
+        std::wcout << L"\n   Tekrar hesaplama yapmak istiyor musunuz? (E/H): ";
+        wchar_t choice;
+        std::wcin >> choice;
         
-        // Sadece 'e' veya 'E' girilirse devam eder
-        keepRunning = (choice == 'e' || choice == 'E');
+        keepRunning = (choice == L'e' || choice == L'E' || choice == L'evet' || choice == L'EVET');
         
         if (!keepRunning) {
-            std::cout << "\n   Program kapatılıyor. İyi günler dileriz!\n";
+            std::wcout << L"\n   Program kapatılıyor. İyi günler dileriz!\n";
         }
     }
 
