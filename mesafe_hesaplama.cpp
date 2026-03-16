@@ -3,8 +3,8 @@
 #include <iomanip>
 #include <limits>
 #include <string>
-#include <fcntl.h>  // _setmode için
-#include <io.h>     // _setmode ve _fileno için
+#include <fcntl.h>  
+#include <io.h>     
 
 /**
  * @brief Koordinat sistemindeki bir noktayı temsil eden şablon sınıf.
